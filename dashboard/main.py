@@ -8,9 +8,9 @@ import requests
 from urllib.parse import quote
 
 # Import Data
-df = pd.read_csv('C:/Users/Carl/Documents/GitHub/SCI1402-Projet/datasets/bbs50-can/bbs50-can_naturecounts_filtered_data.txt', header=0, sep='\t')
+df = pd.read_csv('data/bbs50-can_naturecounts_filtered_data.txt', header=0, sep='\t')
 
-bird_groups_df = pd.read_csv('C:/Users/Carl/Documents/GitHub/SCI1402-Projet/datasets/Birds_by_Report_Group.csv', header=0, sep=',')
+bird_groups_df = pd.read_csv('data/Birds_by_Report_Group.csv', header=0, sep=',')
 
 scientific_names_list = sorted(df["ScientificName"].unique())
 default_selected_bird_name = "Poecile atricapillus"
