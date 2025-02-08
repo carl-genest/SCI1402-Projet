@@ -45,7 +45,9 @@ df = read_chunks_into_dataframe()
 bird_groups_df = pd.read_csv('data/Birds_by_Report_Group.csv', header=0, sep=',')
 
 scientific_names_list = sorted(df["ScientificName"].unique())
-default_selected_bird_name = "Poecile atricapillus"
+global_bird_name = "Poecile atricapillus"
+year_list = sorted(df["YearCollected"].unique(), reverse=True)
+global_year = year_list[0]
 nuthatch_api_key = "accfdbb6-92ec-4836-948e-54500763bd96"
 
 app = Dash(external_stylesheets=[dbc.themes.DARKLY])
@@ -77,47 +79,56 @@ app.layout = dbc.Container(
                 dcc.Dropdown(
                     id="species-dropdown",
                     options=[{"label": name, "value": name} for name in scientific_names_list],
-                    value=default_selected_bird_name,  # Default value
+                    value=global_bird_name,
                     placeholder="Select a species",
                     className="text-dark"
                 ),
-                width=6  # Adjust column width
+                width=6
             ),
             className="mb-4 justify-content-center"
         ),
 
         dbc.Row(
             dbc.Col(
-                dbc.Card(
-                    dbc.CardBody(
-                        [
-                            html.H4(id="bird-name", className="card-title mb-2 text-primary"),
-                            html.P(id="bird-report-group", className="mb-1"),
-                            html.P(id="bird-family", className="mb-1"),
-                            html.P(id="bird-order", className="mb-1"),
-                            html.P(id="bird-length", className="mb-1"),
-                            html.P(id="bird-wingspan", className="mb-1"),
-                            html.P(id="report-trend", className="mb-1"),
-                            html.P(id="report-goal", className="mb-1"),
-                        ]
+                dcc.Loading(
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H4(id="bird-name", className="card-title mb-2 text-primary"),
+                                html.P(id="bird-report-group", className="mb-1"),
+                                html.P(id="bird-family", className="mb-1"),
+                                html.P(id="bird-order", className="mb-1"),
+                                html.P(id="bird-length", className="mb-1"),
+                                html.P(id="bird-wingspan", className="mb-1"),
+                                html.P(id="report-trend", className="mb-1"),
+                                html.P(id="report-goal", className="mb-1"),
+                            ]
+                        ),
+                        className="mb-4 shadow"
                     ),
-                    className="mb-4 shadow"
+                    id="loading-bird-card"
                 ),
                 width=6
             ),
             className="justify-content-center"
         ),
         
-        dbc.Row(id="bird-images", className="mb-4"),
+        dcc.Loading(
+            dbc.Row(id="bird-images", className="mb-4"),
+            id="loading-bird-images"
+        ),
         
         dbc.Row(
             dbc.Col(
-                dcc.Graph(
-                    id="observation-graph",
-                    style={
-                        'width': '80%', 
-                        'margin': '0 auto'
-                    }
+                dcc.Loading(
+                    dcc.Graph(
+                        id="observation-graph",
+                        style={
+                            'width': '80%', 
+                            'margin': '0 auto'
+                        }
+                    ),
+                    id="loading-observation-graph"
                 ),
                 width=12
             ),
@@ -127,9 +138,38 @@ app.layout = dbc.Container(
         
         dbc.Row(
             dbc.Col(
-                dcc.Graph(
-                    id="species-map",
-                    style={"height": "700px", "width": "100%"}
+                html.H5(
+                    "Select a year",
+                    className="text-dark text-center mb-2 mt-4"
+                ),
+                width=12
+            ),
+            style={'backgroundColor': 'white'}
+        ),
+
+        dbc.Row(
+            dbc.Col(
+                dcc.Dropdown(
+                    id="year-dropdown",
+                    options=[{"label": year, "value": year} for year in year_list],
+                    value=global_year,
+                    placeholder="Select a year",
+                    className="text-dark"
+                ), 
+                width=3
+            ),
+            className="justify-content-center",
+            style={'backgroundColor': 'white'}
+        ),
+
+        dbc.Row(
+            dbc.Col(
+                dcc.Loading(           
+                    dcc.Graph(
+                        id="species-map",
+                        style={"height": "700px", "width": "100%"}
+                    ),
+                    id="loading-species-map"       
                 ),
                 width=12
             ),
@@ -151,19 +191,28 @@ app.layout = dbc.Container(
         Output("report-goal", "children"),
         Output("bird-images", "children"),
         Output("observation-graph", "figure"),
-        Output("species-map", "figure")
+        Output("year-dropdown", "options")
     ],
     Input("species-dropdown", "value")
 )
 def update_graph(selected_species):
-    species_first_row = df[df['ScientificName'] == selected_species].iloc[0]
-    bird_group_row = bird_groups_df[bird_groups_df["Scientific name"] == selected_species].iloc[0]
+    global_bird_name = selected_species
+    species_filtered_df = df[df["ScientificName"] == selected_species]
+    year_options = sorted(species_filtered_df["YearCollected"].unique(), reverse=True)
+    
+    bird_group_for_species = bird_groups_df[bird_groups_df["Scientific name"] == selected_species]
+    
+    if not bird_group_for_species.empty:
+        bird_group_row = bird_group_for_species.iloc[0]
+    else:
+        bird_group_row = None
 
-    common_name = f"{species_first_row['CommonName'].capitalize()}"
-    report_group = f"Group: {bird_group_row['Report Group']}"
-    order = f"Order: {species_first_row['Order'].capitalize()}"
-    report_trend = f"2024 Report Trend: {bird_group_row['Trend']}"
-    report_goal = f"2024 Report Goal: {bird_group_row['Goal']}"
+    common_name = f"{species_filtered_df.iloc[0]['CommonName'].capitalize()}"
+    order = f"Order: {species_filtered_df.iloc[0]['Order'].capitalize()}"
+
+    report_group = f"Group: {bird_group_row.get('Report Group', 'Unknown')}" if bird_group_row is not None else ""
+    report_trend = f"2024 Report Trend: {bird_group_row.get('Trend', 'Unknown')}" if bird_group_row is not None else ""
+    report_goal = f"2024 Report Goal: {bird_group_row.get('Goal', 'Unknown')}" if bird_group_row is not None else ""
 
     api_bird_data = get_api_bird_data(selected_species, nuthatch_api_key)
 
@@ -198,12 +247,7 @@ def update_graph(selected_species):
         wingspan = ""
         image_cards_list = ""
 
-    species_filtered_df = df[df["ScientificName"] == selected_species]
-
-    min_year = species_filtered_df["YearCollected"].min()
-    max_year = species_filtered_df["YearCollected"].max()
-
-    year_filtered_df = species_filtered_df[species_filtered_df["YearCollected"] == max_year]
+    
     
     grouped_df = species_filtered_df.groupby("YearCollected", as_index=False)[["ObservationCount"]].sum()
 
@@ -239,7 +283,12 @@ def update_graph(selected_species):
         )
 
     bar_fig.update_layout(
-        title=f"Observations and Trend for {selected_species}",
+        title={
+            "text": f"Observations and Trend for {selected_species}",
+            "x": 0.5,
+            "xanchor": "center",
+            "yanchor": "top"
+        },
         xaxis_title="Year",
         yaxis_title="Total Observations",
         template="plotly_dark",
@@ -264,6 +313,23 @@ def update_graph(selected_species):
         ]
     )
 
+    return common_name, report_group, family, order, length, wingspan, report_trend, report_goal, image_cards_list, bar_fig, year_options
+
+
+@callback(
+    Output('year-dropdown', 'value'),
+    Input('year-dropdown', 'options'))
+def update_selected_year(options):
+    return options[0]
+
+
+@callback(
+    Output("species-map", "figure"),
+    [Input("year-dropdown", "value")]
+)
+def update_map(selected_year):
+    year_filtered_df = df[(df["ScientificName"] == global_bird_name) & (df["YearCollected"] == selected_year)]
+
     map_fig = px.scatter_geo(
         year_filtered_df,
         lat="DecimalLatitude",
@@ -272,7 +338,7 @@ def update_graph(selected_species):
         size="ObservationCount",
         hover_name="ScientificName",
         hover_data=["YearCollected", "ObservationCount"],
-        title=f"Observation Locations for {selected_species} in Canada in {max_year}",
+        title=f"Observation Locations for {global_bird_name} in Canada in {selected_year}",
         projection="natural earth",
         scope="north america",
         template="plotly",
@@ -283,8 +349,15 @@ def update_graph(selected_species):
         projection_scale=1.75,
         center={"lat": 58.0000, "lon": -95.0000}
     )
+    map_fig.update_layout(
+        title={
+            "x": 0.5,
+            "xanchor": "center",
+            "yanchor": "top"
+        }
+    )
 
-    return common_name, report_group, family, order, length, wingspan, report_trend, report_goal, image_cards_list, bar_fig, map_fig
+    return map_fig
 
 
 if __name__ == '__main__':
