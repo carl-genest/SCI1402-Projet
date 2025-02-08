@@ -1,3 +1,4 @@
+import os
 from dash import Dash, html, dcc, callback, Output, Input
 import plotly.express as px
 import plotly.graph_objects as go
@@ -7,8 +8,39 @@ from scipy.stats import linregress
 import requests
 from urllib.parse import quote
 
-# Import Data
-df = pd.read_csv('data/bbs50-can_naturecounts_filtered_data.txt', header=0, sep='\t')
+def read_chunks_into_dataframe(output_dir="data/data_split_files"):
+    chunk_files = sorted([os.path.join(output_dir, f) for f in os.listdir(output_dir) if f.startswith("data_split_file_")])
+
+    df_list = [pd.read_csv(chunk_files[0], sep="\t", header=0)]
+    
+    for chunk in chunk_files[1:]:
+        df_list.append(pd.read_csv(chunk, sep="\t", header=None, names=df_list[0].columns))
+    
+    final_df = pd.concat(df_list, ignore_index=True)
+    
+    return final_df
+
+def get_api_bird_data(sci_name, api_key):
+    base_url = "https://nuthatch.lastelm.software/v2/birds"
+    
+    encoded_name = quote(sci_name)
+    
+    url = f"{base_url}?sciName={encoded_name}&operator=AND"
+
+    headers = {
+        "API-Key": api_key,
+        "accept": "application/json"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Error: {response.status_code}, {response.text}")
+        return None
+
+df = read_chunks_into_dataframe()
 
 bird_groups_df = pd.read_csv('data/Birds_by_Report_Group.csv', header=0, sep=',')
 
@@ -16,23 +48,20 @@ scientific_names_list = sorted(df["ScientificName"].unique())
 default_selected_bird_name = "Poecile atricapillus"
 nuthatch_api_key = "accfdbb6-92ec-4836-948e-54500763bd96"
 
-# Initialize the Dash app
 app = Dash(external_stylesheets=[dbc.themes.DARKLY])
 
 app.layout = dbc.Container(
     [
-        # Header
         dbc.Row(
             dbc.Col(
                 html.H1(
-                    "Species Observation Dashboard",
+                    "Bird Species Observation Dashboard",
                     className="text-center my-4"
                 ),
                 width=12
             )
         ),
 
-        # Dropdown Menu Header
         dbc.Row(
             dbc.Col(
                 html.H5(
@@ -43,7 +72,6 @@ app.layout = dbc.Container(
             )
         ),
         
-        # Dropdown Menu
         dbc.Row(
             dbc.Col(
                 dcc.Dropdown(
@@ -58,7 +86,6 @@ app.layout = dbc.Container(
             className="mb-4 justify-content-center"
         ),
 
-        # Bird Details Card
         dbc.Row(
             dbc.Col(
                 dbc.Card(
@@ -81,10 +108,8 @@ app.layout = dbc.Container(
             className="justify-content-center"
         ),
         
-        # Bird Images
         dbc.Row(id="bird-images", className="mb-4"),
         
-        # Graph for Observations
         dbc.Row(
             dbc.Col(
                 dcc.Graph(
@@ -100,7 +125,6 @@ app.layout = dbc.Container(
             style={'backgroundColor': 'black'}
         ),
         
-        # Graph for Map Visualization
         dbc.Row(
             dbc.Col(
                 dcc.Graph(
@@ -115,32 +139,6 @@ app.layout = dbc.Container(
     fluid=True
 )
 
-def get_basic_bird_data(sci_name, api_key):
-    base_url = "https://nuthatch.lastelm.software/v2/birds"
-    
-    # Encode the scientific name for a URL
-    encoded_name = quote(sci_name)
-    
-    # Construct the full URL with the encoded name
-    url = f"{base_url}?sciName={encoded_name}&operator=AND"
-
-    # Set up headers with API key
-    headers = {
-        "API-Key": api_key,
-        "accept": "application/json"
-    }
-
-    # Make the request
-    response = requests.get(url, headers=headers)
-
-    # Check for success and return JSON data
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Error: {response.status_code}, {response.text}")
-        return None
-
-# Callback to update the graph based on dropdown selection
 @callback(
     [
         Output("bird-name", "children"),
@@ -167,11 +165,10 @@ def update_graph(selected_species):
     report_trend = f"2024 Report Trend: {bird_group_row['Trend']}"
     report_goal = f"2024 Report Goal: {bird_group_row['Goal']}"
 
-    basic_bird_data = get_basic_bird_data(selected_species, nuthatch_api_key)
+    api_bird_data = get_api_bird_data(selected_species, nuthatch_api_key)
 
-    # Extract and print the bird's common name safely
-    if basic_bird_data and "entities" in basic_bird_data and isinstance(basic_bird_data["entities"], list) and len(basic_bird_data["entities"]) > 0:
-        first_entity = basic_bird_data["entities"][0]  # Get the first entity
+    if api_bird_data and "entities" in api_bird_data and isinstance(api_bird_data["entities"], list) and len(api_bird_data["entities"]) > 0:
+        first_entity = api_bird_data["entities"][0]  
 
         family = f"Family: {first_entity.get('family')}" if first_entity.get("family") else ""
         length_min = first_entity.get('lengthMin')
@@ -189,11 +186,10 @@ def update_graph(selected_species):
         else:
             wingspan = ""
         
-        # Bird images
         images = first_entity.get("images", [])
         image_cards = [
             dbc.Col(dbc.Card(dbc.CardImg(src=img, top=True), className="mb-3"), width=4)
-            for img in images[:1]  # Show up to 1 image
+            for img in images[:1]
         ]
         image_cards_list = dbc.Row(image_cards, className="justify-content-center")
     else: 
@@ -202,31 +198,24 @@ def update_graph(selected_species):
         wingspan = ""
         image_cards_list = ""
 
-    # Filter data for the selected species
     species_filtered_df = df[df["ScientificName"] == selected_species]
 
-    # Get the most recent year in YearCollected for the selected species
     min_year = species_filtered_df["YearCollected"].min()
     max_year = species_filtered_df["YearCollected"].max()
 
-    # Filter further to keep only entries from the latest year
     year_filtered_df = species_filtered_df[species_filtered_df["YearCollected"] == max_year]
     
-    # Group data by YearCollected and sum only the ObservationCount column
     grouped_df = species_filtered_df.groupby("YearCollected", as_index=False)[["ObservationCount"]].sum()
 
-    # Linear regression for ObservationCount over YearCollected
-    if len(grouped_df) > 1:  # Ensure there are enough data points
+    if len(grouped_df) > 1:
         slope, intercept, r_value, p_value, std_err = linregress(grouped_df["YearCollected"], grouped_df["ObservationCount"])
         grouped_df["Regression"] = grouped_df["YearCollected"] * slope + intercept
     else:
         slope, intercept, r_value, p_value, std_err = None, None, None, None, None
-        grouped_df["Regression"] = None  # No regression line if insufficient data
+        grouped_df["Regression"] = None 
 
-    # Create the figure
     bar_fig = go.Figure()
 
-    # Add bar trace
     bar_fig.add_trace(
         go.Bar(
             x=grouped_df["YearCollected"],
@@ -238,7 +227,6 @@ def update_graph(selected_species):
         )
     )
 
-    # Add regression line trace if applicable
     if grouped_df["Regression"].notnull().all():
         bar_fig.add_trace(
             go.Scatter(
@@ -256,17 +244,15 @@ def update_graph(selected_species):
         yaxis_title="Total Observations",
         template="plotly_dark",
 
-        # Limit x-axis to only show the year with data
         xaxis=dict(
             tickformat=".0f"
         ),
 
-        # Add annotation for slope and r-value
         annotations=[
             dict(
-                x=1.14,  # Places annotation slightly outside the right border
-                y=0.5,  # Middle of the chart
-                xref="paper",  # Relative to the figure, not data points
+                x=1.14, 
+                y=0.5, 
+                xref="paper", 
                 yref="paper",
                 text=f"Slope: {slope:.2f}<br>R: {r_value:.2f}" if slope is not None else f"",
                 showarrow=False,
@@ -278,7 +264,6 @@ def update_graph(selected_species):
         ]
     )
 
-    # Create the map visualization
     map_fig = px.scatter_geo(
         year_filtered_df,
         lat="DecimalLatitude",
@@ -301,6 +286,6 @@ def update_graph(selected_species):
 
     return common_name, report_group, family, order, length, wingspan, report_trend, report_goal, image_cards_list, bar_fig, map_fig
 
-# Run the app
+
 if __name__ == '__main__':
     app.run(debug=True)
