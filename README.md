@@ -54,8 +54,14 @@ data/
 │ │--data_split_file_8.txt
 │-- Birds_by_Report_Group.csv          # Groupes d'oiseaux pour chaque espèce
 │-- Birds_by_Report_Group_Unique.csv   # Groupe unique sélectionné pour chaque espèce
-│requirements.txt                      # Liste des dépendances Python
-│README.md                             # Ce fichier
+scripts/                               # Scripts utilisés pour valider ou modifier les données
+│-- filter_report_groups.py
+│-- filter_year.py
+│-- split_data_file.py
+│-- validate_naturecounts_dataset.py
+│-- validate_report_group_dataset.py
+requirements.txt                      # Liste des dépendances Python
+README.md                             # Ce fichier
 ```
 
 ## Données utilisées
