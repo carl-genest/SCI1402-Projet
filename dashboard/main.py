@@ -614,7 +614,7 @@ def update_bird_group_card(selected_bird_group):
     non_outliers_indices = np.abs(z_scores) <= 3
     nongroup_slopes = np.array(nongroup_slopes)[non_outliers_indices]
 
-    # Calcul des statistiques descriptives pour le groupe sélectionné
+    # Calcul des statistiques pour le groupe sélectionné
     group_mean_val = np.mean(group_slopes)
     group_std_val = np.std(group_slopes)
     group_len = f"Group size : {len(group_slopes)}"
@@ -623,7 +623,7 @@ def update_bird_group_card(selected_bird_group):
     group_skew = f"Skew: {skew(group_slopes):.4f}"
     group_kurtosis = f"Kurtosis: {kurtosis(group_slopes):.4f}"
 
-    # Calcul des statistiques descriptives pour les autres groupes
+    # Calcul des statistiques pour les autres groupes
     nongroup_mean_val = np.mean(nongroup_slopes)
     nongroup_std_val = np.std(nongroup_slopes)
     nongroup_len = f"Remaining group size : {len(nongroup_slopes)}"

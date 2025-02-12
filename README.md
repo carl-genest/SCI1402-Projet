@@ -1,4 +1,4 @@
-# Lisez-moi : Projet - Bird Species Observation Dashboard
+# Lisez-moi : Projet de tableau de bord des observations d'oiseaux au Canada
 
 ## Description
 Cette application Dash affiche les observations d'oiseaux au Canada sous deux formes :
@@ -6,9 +6,10 @@ Cette application Dash affiche les observations d'oiseaux au Canada sous deux fo
 - Une **carte interactive** représentant les localisations des observations sur le territoire canadien.
 
 ## Fonctionnalités
-- **Filtrage des données** : Sélection des espèces d'oiseaux.
-- **Visualisation interactive** : Zoom et navigation sur la carte.
-- **Graphique dynamique** : Mise à jour automatique en fonction de l'espèce sélectionnée.
+- **Filtrage des données** : Sélection des espèces d'oiseaux, des groupes d'espèces et de l'année liée aux observations.
+- **Visualisation des cartes interactives** : Zoom et navigation sur la carte.
+- **Graphique interactif** : Affichage des tendances en fonction de l'espèce sélectionnée.
+- **Statistiques** : Affichage de statistiques sur le groupe d'espèces choisi et application d'un test statistique pour déterminer l'aspect significatif des différences de tendances entre le groupe d'espèces choisi et le reste des espèces. Un diagramme Quantile-Quantile et un diagramme en boîte permettent de visualiser la distribution des groupes.  
 
 ## Installation
 ### Prérequis
@@ -40,16 +41,25 @@ Cette application Dash affiche les observations d'oiseaux au Canada sous deux fo
 ## Structure du projet
 ```
 dashboard/
-│-- main.py               # Fichier principal de l'application Dash
+│-- main.py                            # Fichier principal de l'application Dash
 data/
-│-- bbs50-can_naturecounts_filtered_data.txt # Observations
-│-- Birds_by_Report_Group.csv # Groupes d'oiseaux
-│requirements.txt     # Liste des dépendances Python
-│README.md            # Ce fichier
+│-- data_split_files/                  # Observations - fichiers découpés en raison de leur taille
+│ │--data_split_file_1.txt
+│ │--data_split_file_2.txt
+│ │--data_split_file_3.txt
+│ │--data_split_file_4.txt
+│ │--data_split_file_5.txt
+│ │--data_split_file_6.txt
+│ │--data_split_file_7.txt
+│ │--data_split_file_8.txt
+│-- Birds_by_Report_Group.csv          # Groupes d'oiseaux pour chaque espèce
+│-- Birds_by_Report_Group_Unique.csv   # Groupe unique sélectionné pour chaque espèce
+│requirements.txt                      # Liste des dépendances Python
+│README.md                             # Ce fichier
 ```
 
 ## Données utilisées
-Le fichier `data/bbs50-can_naturecounts_filtered_data.txt` contient :
+Les fichiers dans `data/data_split_files/` contiennent :
 - `ScientificName` : Nom scientifique de l'espèce observée
 - `CommonName` : Nom commun de l'oiseau observé
 - `Order` : Ordre de l'espèce observée
