@@ -124,31 +124,31 @@ app.layout = dbc.Container(
                             [
                                 html.H4(id="bird-name", className="card-title mb-4 text-info"),
                                 html.Div([
-                                    html.Label("Group", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Label("Group", style={'fontWeight': 'bold', 'width': '30%', 'marginLeft': '1px', 'marginRight': '5px'}),
                                     html.Span(id="bird-report-group"),
                                 ], id="div-bird-group", className="mb-1"),
                                 html.Div([
-                                    html.Label("Family", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Label("Family", style={'fontWeight': 'bold', 'width': '30%', 'marginLeft': '1px', 'marginRight': '5px'}),
                                     html.Span(id="bird-family"),
                                 ], id="div-bird-family", className="mb-1"),
                                 html.Div([
-                                    html.Label("Order", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Label("Order", style={'fontWeight': 'bold', 'width': '30%', 'marginLeft': '1px', 'marginRight': '5px'}),
                                     html.Span(id="bird-order"),
                                 ], id="div-bird-order", className="mb-1"),
                                 html.Div([
-                                    html.Label("Length", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Label("Length", style={'fontWeight': 'bold', 'width': '30%', 'marginLeft': '1px', 'marginRight': '5px'}),
                                     html.Span(id="bird-length"),
                                 ], id="div-bird-length", className="mb-1"),
                                 html.Div([
-                                    html.Label("Wingspan", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Label("Wingspan", style={'fontWeight': 'bold', 'width': '30%', 'marginLeft': '1px', 'marginRight': '5px'}),
                                     html.Span(id="bird-wingspan"),
                                 ], id="div-bird-wingspan", className="mb-1"),
                                 html.Div([
-                                    html.Label("2024 Report Trend", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Label("2024 Report Trend", style={'fontWeight': 'bold', 'width': '30%', 'marginLeft': '1px', 'marginRight': '5px'}),
                                     html.Span(id="report-trend"),
                                 ], id="div-report-trend", className="mb-1"),
                                 html.Div([
-                                    html.Label("2024 Report Goal", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Label("2024 Report Goal", style={'fontWeight': 'bold', 'width': '30%', 'marginLeft': '1px', 'marginRight': '5px'}),
                                     html.Span(id="report-goal"),
                                 ], id="div-report-goal", className="mb-1"),
                             ]
@@ -249,7 +249,7 @@ app.layout = dbc.Container(
                     placeholder="Select a bird group",
                     className="text-dark"
                 ),
-                width=5
+                width=6
             ),
             className="mb-4 justify-content-center"
         ),
@@ -261,7 +261,7 @@ app.layout = dbc.Container(
                     dbc.Card(
                         dbc.CardBody(
                             [
-                                html.H4("Bird Group Analysis", className="card-title mb-2 text-info"),
+                                html.H4("Bird group analysis", className="card-title mb-2 text-info"),
 
                                 html.Div("Grassland Bird Group", id="group-name", className="mt-5 mb-3 text-light", style={'fontWeight': 'bold'}),
                                 html.Div([
@@ -333,7 +333,7 @@ app.layout = dbc.Container(
                     ),
                     id="loading-bird-group-card"
                 ),
-                width=5
+                width=6
             ),
             className="justify-content-center"
         ),
@@ -379,7 +379,7 @@ app.layout = dbc.Container(
                     ),
                     id="loading-null-hypo-card"
                 ),
-                width=5
+                width=6
             ),
             className="justify-content-center"
         ),
