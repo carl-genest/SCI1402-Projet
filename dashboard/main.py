@@ -122,14 +122,35 @@ app.layout = dbc.Container(
                     dbc.Card(
                         dbc.CardBody(
                             [
-                                html.H4(id="bird-name", className="card-title mb-2 text-info"),
-                                html.P(id="bird-report-group", className="mb-1"),
-                                html.P(id="bird-family", className="mb-1"),
-                                html.P(id="bird-order", className="mb-1"),
-                                html.P(id="bird-length", className="mb-1"),
-                                html.P(id="bird-wingspan", className="mb-1"),
-                                html.P(id="report-trend", className="mb-1"),
-                                html.P(id="report-goal", className="mb-1"),
+                                html.H4(id="bird-name", className="card-title mb-4 text-info"),
+                                html.Div([
+                                    html.Label("Group", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Span(id="bird-report-group"),
+                                ], id="div-bird-group", className="mb-1"),
+                                html.Div([
+                                    html.Label("Family", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Span(id="bird-family"),
+                                ], id="div-bird-family", className="mb-1"),
+                                html.Div([
+                                    html.Label("Order", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Span(id="bird-order"),
+                                ], id="div-bird-order", className="mb-1"),
+                                html.Div([
+                                    html.Label("Length", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Span(id="bird-length"),
+                                ], id="div-bird-length", className="mb-1"),
+                                html.Div([
+                                    html.Label("Wingspan", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Span(id="bird-wingspan"),
+                                ], id="div-bird-wingspan", className="mb-1"),
+                                html.Div([
+                                    html.Label("2024 Report Trend", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Span(id="report-trend"),
+                                ], id="div-report-trend", className="mb-1"),
+                                html.Div([
+                                    html.Label("2024 Report Goal", style={'fontWeight': 'bold', 'width': '23%', 'marginLeft': '1px', 'marginRight': '5px'}),
+                                    html.Span(id="report-goal"),
+                                ], id="div-report-goal", className="mb-1"),
                             ]
                         ),
                         className="mb-4 shadow"
@@ -241,21 +262,71 @@ app.layout = dbc.Container(
                         dbc.CardBody(
                             [
                                 html.H4("Bird Group Analysis", className="card-title mb-2 text-info"),
-                                html.P(id="group-len", className="mt-4 mb-1"),
-                                html.P(id="group-mean", className="mb-1"),
-                                html.P(id="group-std", className="mb-1"),
-                                html.P(id="group-skew", className="mb-1"),
-                                html.P(id="group-kurtosis", className="mb-1"),
-                                html.P(id="group-norm-pval", className="mb-1"),
-                                html.P(id="nongroup-len", className="mt-4 mb-1"),
-                                html.P(id="nongroup-mean", className="mb-1"),
-                                html.P(id="nongroup-std", className="mb-1"),
-                                html.P(id="nongroup-skew", className="mb-1"),
-                                html.P(id="nongroup-kurtosis", className="mb-1"),
-                                html.P(id="nongroup-norm-pval", className="mb-1"),
-                                html.P(id="norm_interpretation", className="mt-4 mb-1"),
-                                html.P(id="variance_test_pval", className="mb-1"),
-                                html.P(id="variance_interpretation", className="mb-1"),
+
+                                html.Div("Grassland Bird Group", id="group-name", className="mt-5 mb-3 text-light", style={'fontWeight': 'bold'}),
+                                html.Div([
+                                    html.Label("Group size", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="group-len", style={'width': '70%'}),
+                                ], id="div-group-len", className="mb-1"),
+                                html.Div([
+                                    html.Label("Mean", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="group-mean", style={'width': '70%'}),
+                                ], id="div-group-mean", className="mb-1"),
+                                html.Div([
+                                    html.Label("Std deviation", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="group-std", style={'width': '70%'}),
+                                ], id="div-group-std", className="mb-1"),
+                                html.Div([
+                                    html.Label("Skew", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="group-skew", style={'width': '70%'}),
+                                ], id="div-group-skew", className="mb-1"),
+                                html.Div([
+                                    html.Label("Kurtosis", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="group-kurtosis", style={'width': '70%'}),
+                                ], id="div-group-kurtosis", className="mb-1"),
+                                html.Div([
+                                    html.Label("Shapiro-Wilk p-value", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="group-norm-pval", style={'width': '70%'}),
+                                ], id="div-group-norm-pval", className="mb-1"),
+
+                                html.Div("Remaining Group", className="mt-5 mb-3 text-light", style={'fontWeight': 'bold'}),
+                                html.Div([
+                                    html.Label("Group size", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="nongroup-len", style={'width': '70%'}),
+                                ], id="div-nongroup-len", className="mb-1"),
+                                html.Div([
+                                    html.Label("Mean", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="nongroup-mean", style={'width': '70%'}),
+                                ], id="div-nongroup-mean", className="mb-1"),
+                                html.Div([
+                                    html.Label("Std deviation", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="nongroup-std", style={'width': '70%'}),
+                                ], id="div-nongroup-std", className="mb-1"),
+                                html.Div([
+                                    html.Label("Skew", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="nongroup-skew", style={'width': '70%'}),
+                                ], id="div-nongroup-skew", className="mb-1"),
+                                html.Div([
+                                    html.Label("Kurtosis", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="nongroup-kurtosis", style={'width': '70%'}),
+                                ], id="div-nongroup-kurtosis", className="mb-1"),
+                                html.Div([
+                                    html.Label("Shapiro-Wilk p-value", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="nongroup-norm-pval", style={'width': '70%'}),
+                                ], id="div-nongroup-norm-pval", className="mb-1"),
+
+                                html.Div([
+                                    html.Label("Normality test interpretation", style={'fontWeight': 'bold'}),
+                                    html.Div(id="norm_interpretation"),
+                                ], id="div-norm_interpretation", className="mt-5 mb-1"),
+                                html.Div([
+                                    html.Label("Variance test p-value", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="variance_test_pval", style={'width': '70%'}),
+                                ], id="div-variance_test_pval", className="mt-4 mb-1"),
+                                html.Div([
+                                    html.Label("Variance test interpretation", style={'fontWeight': 'bold'}),
+                                    html.Div(id="variance_interpretation"),
+                                ], id="div-variance_interpretation", className="mt-4 mb-1"),
                             ]
                         ),
                         className="mb-4 shadow"
@@ -275,12 +346,33 @@ app.layout = dbc.Container(
                         dbc.CardBody(
                             [
                                 html.H4("Hypothesis test", className="card-title mb-2 text-info"),
-                                html.P(id="null_hypo_def", className="mt-4 mb-1"),
-                                html.P(id="alt_hypo_def", className="mb-1"),
-                                html.P(id="null_hypo_test_name", className="mt-4 mb-1"),
-                                html.P(id="null_hypo_test_t_stat", className="mb-1"),
-                                html.P(id="null_hypo_test_p_val", className="mb-1"),
-                                html.P(id="null_hypo_test_interpretation", className="mt-4 mb-1"),
+
+                                html.Div([
+                                    html.Label("H0", style={'fontWeight': 'bold', 'width': '30%', 'display': 'inline-block', 'verticalAlign': 'top'}),
+                                    html.Label(id="null_hypo_def", style={'width': '70%'}),
+                                ], id="div-null_hypo_def", className="mt-4 mb-1"),
+                                html.Div([
+                                    html.Label("H1", style={'fontWeight': 'bold', 'width': '30%', 'display': 'inline-block', 'verticalAlign': 'top'}),
+                                    html.Label(id="alt_hypo_def", style={'width': '70%'}),
+                                ], id="div-alt_hypo_def", className="mb-1"),
+
+                                html.Div([
+                                    html.Label("Statistical test name", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="null_hypo_test_name", style={'width': '70%'}),
+                                ], id="div-null_hypo_test_name", className="mt-4 mb-1"),
+                                html.Div([
+                                    html.Label("T-statistic", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="null_hypo_test_t_stat", style={'width': '70%'}),
+                                ], id="div-null_hypo_test_t_stat", className="mb-1"),
+                                html.Div([
+                                    html.Label("P-value", style={'fontWeight': 'bold', 'width': '30%'}),
+                                    html.Label(id="null_hypo_test_p_val", style={'width': '70%'}),
+                                ], id="div-null_hypo_test_p_val", className="mb-1"),
+
+                                html.Div([
+                                    html.Label("Statistical test interpretation", style={'fontWeight': 'bold'}),
+                                    html.Div(id="null_hypo_test_interpretation"),
+                                ], id="div-null_hypo_test_interpretation", className="mt-5 mb-1"),
                             ]
                         ),
                         className="mb-4 shadow"
@@ -374,12 +466,12 @@ def update_graph(selected_species):
 
     # Récupération des informations générales sur l'espèce
     common_name = f"{species_filtered_df.iloc[0]['CommonName'].capitalize()}"
-    order = f"Order: {species_filtered_df.iloc[0]['Order'].capitalize()}"
+    order = f"{species_filtered_df.iloc[0]['Order'].capitalize()}"
 
     # Récupération des informations sur le groupe et la tendance du rapport 2024 si disponibles
-    report_group = f"Group: {report_groups_string}" if report_groups_string is not None else ""
-    report_trend = f"2024 Report Trend: {bird_group_row.get('Trend', 'Unknown')}" if bird_group_row is not None else ""
-    report_goal = f"2024 Report Goal: {bird_group_row.get('Goal', 'Unknown')}" if bird_group_row is not None else ""
+    report_group = f"{report_groups_string}" if report_groups_string is not None else ""
+    report_trend = f"{bird_group_row.get('Trend', 'Unknown')}" if bird_group_row is not None else ""
+    report_goal = f"{bird_group_row.get('Goal', 'Unknown')}" if bird_group_row is not None else ""
 
     # Appel à une API externe pour récupérer des données complémentaires sur l'espèce
     api_bird_data = get_api_bird_data(selected_species, nuthatch_api_key)
@@ -389,7 +481,7 @@ def update_graph(selected_species):
         first_entity = api_bird_data["entities"][0]  
 
         # Récupération des informations taxonomiques et biologiques
-        family = f"Family: {first_entity.get('family')}" if first_entity.get("family") else ""
+        family = f"{first_entity.get('family')}" if first_entity.get("family") else ""
         length_min = first_entity.get('lengthMin')
         length_max = first_entity.get('lengthMax')
         wingspan_min = first_entity.get("wingspanMin")
@@ -397,12 +489,12 @@ def update_graph(selected_species):
 
         # Formatage des informations sur la taille et l'envergure
         if length_min and length_max:
-            length = f"Length: {length_min} - {length_max} cm"
+            length = f"{length_min} - {length_max} cm"
         else:
             length = ""
 
         if wingspan_min and wingspan_max:
-            wingspan = f"Wingspan: {wingspan_min} - {wingspan_max} cm"
+            wingspan = f"{wingspan_min} - {wingspan_max} cm"
         else:
             wingspan = ""
         
@@ -494,6 +586,30 @@ def update_graph(selected_species):
     return common_name, report_group, family, order, length, wingspan, report_trend, report_goal, image_cards_list, bar_fig, year_options
 
 
+# Callback pour mettre à jour la visibilité des lignes selon le contenu de la carte
+@app.callback(
+    [Output("div-bird-group", "style"),
+     Output("div-bird-family", "style"),
+     Output("div-bird-order", "style"),
+     Output("div-bird-length", "style"),
+     Output("div-bird-wingspan", "style"),
+     Output("div-report-trend", "style"),
+     Output("div-report-goal", "style")],
+    [Input("bird-report-group", "children"),
+     Input("bird-family", "children"),
+     Input("bird-order", "children"),
+     Input("bird-length", "children"),
+     Input("bird-wingspan", "children"),
+     Input("report-trend", "children"),
+     Input("report-goal", "children")]
+)
+def toggle_visibility(*values):
+    return [
+        {'display': 'block'} if value else {'display': 'none'}
+        for value in values
+    ]
+
+
 # Callback pour mettre à jour la valeur du menu déroulant selon les nouvelles options produites par le callback précédent
 @callback(
     Output('year-dropdown', 'value'),
@@ -553,6 +669,7 @@ def update_map(selected_species, selected_year):
 # Callback pour mettre à jour les affichages liés à la sélection du groupe d'espèces
 @callback(
     [
+        Output("group-name", "children"),
         Output("group-len", "children"),
         Output("group-mean", "children"),
         Output("group-std", "children"),
@@ -615,28 +732,29 @@ def update_bird_group_card(selected_bird_group):
     nongroup_slopes = np.array(nongroup_slopes)[non_outliers_indices]
 
     # Calcul des statistiques pour le groupe sélectionné
+    group_name = f"{selected_bird_group} Group"
     group_mean_val = np.mean(group_slopes)
     group_std_val = np.std(group_slopes)
-    group_len = f"Group size : {len(group_slopes)}"
-    group_mean = f"Mean: {group_mean_val:.4f}"
-    group_std = f"Std: {group_std_val:.4f}"
-    group_skew = f"Skew: {skew(group_slopes):.4f}"
-    group_kurtosis = f"Kurtosis: {kurtosis(group_slopes):.4f}"
+    group_len = f"{len(group_slopes)}"
+    group_mean = f"{group_mean_val:.4f}"
+    group_std = f"{group_std_val:.4f}"
+    group_skew = f"{skew(group_slopes):.4f}"
+    group_kurtosis = f"{kurtosis(group_slopes):.4f}"
 
     # Calcul des statistiques pour les autres groupes
     nongroup_mean_val = np.mean(nongroup_slopes)
     nongroup_std_val = np.std(nongroup_slopes)
-    nongroup_len = f"Remaining group size : {len(nongroup_slopes)}"
-    nongroup_mean = f"Mean: {nongroup_mean_val:.4f}"
-    nongroup_std = f"Std: {nongroup_std_val:.4f}"
-    nongroup_skew = f"Skew: {skew(nongroup_slopes):.4f}"
-    nongroup_kurtosis = f"Kurtosis: {kurtosis(nongroup_slopes):.4f}"
+    nongroup_len = f"{len(nongroup_slopes)}"
+    nongroup_mean = f"{nongroup_mean_val:.4f}"
+    nongroup_std = f"{nongroup_std_val:.4f}"
+    nongroup_skew = f"{skew(nongroup_slopes):.4f}"
+    nongroup_kurtosis = f"{kurtosis(nongroup_slopes):.4f}"
 
     # Test de normalité de Shapiro-Wilk
     sh_stat_group, sh_p_group = shapiro(group_slopes)
     sh_stat_nongroup, sh_p_nongroup = shapiro(nongroup_slopes)
-    group_norm_pval = f"Normality test p-value: {sh_p_group}"
-    nongroup_norm_pval = f"Normality test p-value: {sh_p_nongroup}"
+    group_norm_pval = f"{sh_p_group}"
+    nongroup_norm_pval = f"{sh_p_nongroup}"
 
     # Choix du test statistique approprié en fonction de la normalité des distributions
     if sh_p_group > 0.05 and sh_p_nongroup > 0.05: 
@@ -666,11 +784,11 @@ def update_bird_group_card(selected_bird_group):
         test_used = "Mann-Whitney U test"
 
     # Définition des hypothèses et affichage des résultats
-    null_hypo_def = f"H0: Differences between the {selected_bird_group} group slopes and the remaining group slopes are not significant"
-    alt_hypo_def = f"H1: There is significant difference between the {selected_bird_group} group slopes and the remaining group slopes"
-    null_hypo_test_name = f"{test_used} results"
-    null_hypo_test_t_stat = f"T-statistic: {t_stat}"
-    null_hypo_test_p_val = f"P-value: {p_value}"
+    null_hypo_def = f"Differences between the {selected_bird_group} group slopes and the remaining group slopes are not significant"
+    alt_hypo_def = f"There is significant difference between the {selected_bird_group} group slopes and the remaining group slopes"
+    null_hypo_test_name = f"{test_used}"
+    null_hypo_test_t_stat = f"{t_stat}"
+    null_hypo_test_p_val = f"{p_value}"
 
     # Interprétation du test statistique
     if p_value < 1e-10:
@@ -743,7 +861,25 @@ def update_bird_group_card(selected_bird_group):
     ) 
 
     # Retourne les variables utiles à l'affichage
-    return group_len, group_mean, group_std, group_skew, group_kurtosis, group_norm_pval, nongroup_len, nongroup_mean, nongroup_std, nongroup_skew, nongroup_kurtosis, nongroup_norm_pval, norm_interpretation, variance_test_pval, variance_interpretation, null_hypo_def, alt_hypo_def, null_hypo_test_name, null_hypo_test_t_stat, null_hypo_test_p_val, null_hypo_test_interpretation, qqfig, fig_box
+    return group_name, group_len, group_mean, group_std, group_skew, group_kurtosis, group_norm_pval, nongroup_len, nongroup_mean, nongroup_std, nongroup_skew, nongroup_kurtosis, nongroup_norm_pval, norm_interpretation, variance_test_pval, variance_interpretation, null_hypo_def, alt_hypo_def, null_hypo_test_name, null_hypo_test_t_stat, null_hypo_test_p_val, null_hypo_test_interpretation, qqfig, fig_box
+
+
+# Callback pour mettre à jour la visibilité des lignes selon le contenu
+@app.callback(
+    [   
+        Output("div-variance_test_pval", "style"),
+        Output("div-variance_interpretation", "style"),
+    ],
+    [
+        Input("variance_test_pval", "children"),
+        Input("variance_interpretation", "children"),
+    ]
+)
+def toggle_visibility(*values):
+    return [
+        {'display': 'block'} if value else {'display': 'none'}
+        for value in values
+    ]
 
 
 # Lancement de l'application si le fichier est exécuté directement
